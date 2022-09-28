@@ -24,7 +24,7 @@ mclose(fileID);
 
 
 gain_lat(3) = 30 / 3600;
-gain_lat(2) = gain_lat(2) * 10;
+gain_lat(2) = gain_lat(3) * 10;
 gain_lat(1) = 1.5;
 
 gain_lng(3) = 45 / 3600;
@@ -51,11 +51,11 @@ for i = 1:size(meshcode,'r')
 
 end
 
-plot(lng,lat);
-scf();
+//plot(lng,lat);
+//scf();
 
 grayplot(label_lng,label_lat,T);
-/*
+
 //宇都宮を表示
 geodata = fromJSON("N03-19_09_190101.geojson","file");
 
@@ -77,4 +77,4 @@ else
   plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
   //fill(lng,lat,'y');
 end
-*/
+
