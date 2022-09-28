@@ -58,7 +58,7 @@ grayplot(label_lng,label_lat,T);
 
 zm = min(elevation);
 zM = max(elevation);
-colorbar(zm,zM)
+colorbar(zm,zM);
 
 //市町村ポリゴンを表示
 geodata = fromJSON("N03-19_09_190101.geojson","file");
