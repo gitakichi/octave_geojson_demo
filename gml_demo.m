@@ -22,59 +22,26 @@ end
 mclose(fileID);
 
 
-gain_lat(5) = 7.5 / 3700;//秒はdegに変換済み
-gain_lat(4) = gain_lat(5) * 2;
-gain_lat(3) = gain_lat(5) * 2;
-gain_lat(2) = gain_lat(5) * 10;
+
+gain_lat(3) = 30 / 3600;
+gain_lat(2) = gain_lat(2) * 10;
 gain_lat(1) = 1.5;
 
-gain_lng(5) = 11.25 / 3700;//秒はdegに変換済み
-gain_lng(4) = gain_lat(5) * 2;
-gain_lng(3) = gain_lat(5) * 2;
-gain_lng(2) = gain_lat(5) * 10;
+gain_lng(3) = 45 / 3600;
+gain_lng(2) = gain_lng(3) * 10;
 gain_lng(1) = 100;//これは足すだけ
 
 for i = 1:size(meshcode,'r')
 	mesh_lat(1) = strtod(part(meshcode(i),1:2));
-	mesh_lng(1) = strtod(part(meshcode(i),1:2));
+	mesh_lng(1) = strtod(part(meshcode(i),3:4));
 	mesh_lat(2) = strtod(part(meshcode(i),5));
 	mesh_lng(2) = strtod(part(meshcode(i),6));
 	mesh_lat(3) = strtod(part(meshcode(i),7));
 	mesh_lng(3) = strtod(part(meshcode(i),8));
-	
-	if part(meshcode(i),9) == '4' then
-		mesh_lat(4) = 1;//緯度
-		mesh_lng(4) = 1;//経度
-	elseif part(meshcode(i),9) == '3' then
-		mesh_lat(4) = 1;
-		mesh_lng(4) = 0;
-	elseif part(meshcode(i),9) == '2' then
-		mesh_lat(4) = 0;
-		mesh_lng(4) = 1;
-	else
-		mesh_lat(4) = 0;
-		mesh_lng(4) = 0;
-	end
-	
-	if part(meshcode(i),10) == '4' then
-		mesh_lat(5) = 1;
-		mesh_lng(5) = 1;
-	elseif part(meshcode(i),10) == '3' then
-		mesh_lat(5) = 1;
-		mesh_lng(5) = 0;
-	elseif part(meshcode(i),10) == '2' then
-		mesh_lat(5) = 0;
-		mesh_lng(5) = 1;
-	else
-		mesh_lat(5) = 0;
-		mesh_lng(5) = 0;
-	end
 
-	lat(i) = mesh_lat(1) * gain_lat(1) + mesh_lat(2) * gain_lat(2) + mesh_lat(3) * gain_lat(3) + mesh_lat(4) * gain_lat(4) + mesh_lat(5) * gain_lat(5);
+	lat(i) = mesh_lat(1) / gain_lat(1) + mesh_lat(2) * gain_lat(2) + mesh_lat(3) * gain_lat(3);
+	lng(i) = mesh_lng(1) + gain_lng(1) + mesh_lng(2) * gain_lng(2) + mesh_lng(3) * gain_lng(3);
 	
-	lng(i) = mesh_lng(1) + gain_lng(1) + mesh_lng(2) * gain_lng(2) + mesh_lng(3) * gain_lng(3) + mesh_lng(4) * gain_lng(4) + mesh_lng(5) * gain_lng(5);
-	
-	//ここで謎のテーブル作るかも
 	y = mesh_lat(2) * 10 + mesh_lat(3) + 1;
 	x = mesh_lng(2) * 10 + mesh_lng(3) + 1;
 	
@@ -85,6 +52,29 @@ for i = 1:size(meshcode,'r')
 end
 
 plot(lng,lat);
+scf();
+
 grayplot(label_lng,label_lat,T);
+/*
+//宇都宮を表示
+geodata = fromJSON("N03-19_09_190101.geojson","file");
 
+//scf();
 
+i = 1;
+outline = geodata.features(i).geometry.coordinates;
+
+if iscell(outline)
+  for j = 1:length(outline)
+    lng = outline{j}(:,1);
+    lat = outline{j}(:,2);
+    plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
+    //fill(lng,lat,'y');
+  end
+else
+  lng = outline(:,1);
+  lat = outline(:,2);
+  plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
+  //fill(lng,lat,'y');
+end
+*/
