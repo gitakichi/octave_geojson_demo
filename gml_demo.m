@@ -45,7 +45,7 @@ for i = 1:size(meshcode,'r')
 	y = mesh_lat(2) * 10 + mesh_lat(3) + 1;
 	x = mesh_lng(2) * 10 + mesh_lng(3) + 1;
 	
-	T(y,x) = elevation(i);
+	T(x,y) = elevation(i);
 	label_lat(y) = lat(i);
 	label_lng(x) = lng(i);
 
@@ -56,18 +56,20 @@ end
 
 grayplot(label_lng,label_lat,T);
 
-//宇都宮を表示
-geodata = fromJSON("N03-19_09_190101.geojson","file");
+zm = min(elevation);
+zM = max(elevation);
+colorbar(zm,zM)
 
-//scf();
+//市町村ポリゴンを表示
+geodata = fromJSON("N03-19_09_190101.geojson","file");
 
 i = 1;
 outline = geodata.features(i).geometry.coordinates;
 
-if iscell(outline)
+if type(outline) == 15
   for j = 1:length(outline)
-    lng = outline{j}(:,1);
-    lat = outline{j}(:,2);
+    lng = outline(j)(:,1);
+    lat = outline(j)(:,2);
     plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
     //fill(lng,lat,'y');
   end
@@ -76,5 +78,26 @@ else
   lat = outline(:,2);
   plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
   //fill(lng,lat,'y');
+end
+
+for i = 2:length(geodata.features)
+  outline = geodata.features(i).geometry.coordinates;
+
+  //disp(length(outline));
+  //disp(type(outline));
+	
+  if type(outline) == 15
+    for j = 1:length(outline)
+      lng = outline(j)(:,1);
+      lat = outline(j)(:,2);
+      plot(lng,lat);
+      //fill(lng,lat,'w');
+    end
+  else
+    lng = outline(:,1);
+    lat = outline(:,2);
+    plot(lng,lat);
+    //fill(lng,lat,'w');
+  end
 end
 
