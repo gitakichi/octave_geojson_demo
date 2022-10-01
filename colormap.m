@@ -24,7 +24,7 @@ gain_lng(3) = gain_lng(4) * 2;
 gain_lng(2) = gain_lng(3) * 10;
 gain_lng(1) = 100;//これは足すだけ
 
-//disp(size(meshcode,'r'));
+//緯度経度の計算
 for i = 1:size(meshcode,'r')
 	mesh_lat(1) = strtod(part(meshcode(i),1:2));
 	mesh_lng(1) = strtod(part(meshcode(i),3:4));
@@ -64,18 +64,24 @@ for i = 1:size(meshcode,'r')
 		mesh_lng(5) = 0;
 	end
 	
-	
 	lat(i) = mesh_lat(1) / gain_lat(1) + mesh_lat(2) * gain_lat(2) + mesh_lat(3) * gain_lat(3) + mesh_lat(4) * gain_lat(4) + mesh_lat(5) * gain_lat(5);
 	lng(i) = mesh_lng(1) + gain_lng(1) + mesh_lng(2) * gain_lng(2) + mesh_lng(3) * gain_lng(3) + mesh_lng(4) * gain_lng(4) + mesh_lng(5) * gain_lng(5);
-	
-	y = (mesh_lat(1)-54) * 320 + mesh_lat(2) * 40 + mesh_lat(3) * 4 + mesh_lat(4) * 2 + mesh_lat(5) + 1;
-	x = (mesh_lng(1)-39) * 320 + mesh_lng(2) * 40 + mesh_lng(3) * 4 + mesh_lng(4) * 2 + mesh_lng(5) + 1;
+end
+
+//カラーマップ用テーブルの作成
+unique_lng = unique(lng);
+unique_lat = unique(lat);
+
+for i = 1:length(lng)//x基準にした
+	y = find(lat(i) == unique_lat);
+	x = find(lng(i) == unique_lng);
 	
 	T(x,y) = elevation(i);
 	label_lat(y) = lat(i);
 	label_lng(x) = lng(i);
-
 end
+
+
 
 //plot(lng,lat);
 //scf();
@@ -83,8 +89,6 @@ grayplot(label_lng,label_lat,T);
 
 zm = min(elevation);
 zM = max(elevation);
-//disp(zm);
-//disp(zM);
 colorbar(zm,zM);
 
 //GMLの並び
