@@ -5,14 +5,14 @@ function [meshcode,elevation] = get_elevation(path)
     while ~meof(fileID)
         tline = mgetl(fileID,1);
         if strindex(tline,'<gml:tupleList>') > 0
-          //for i = 1:16
-          i = 1;
+          for i = 1:16
+          //i = 1;
             tline = mgetl(fileID,1);
             C = strsplit(tline,',');
             meshcode(j) = C(1);
             elevation(j) = strtod(C(2));
             j = j + 1;
-          //end
+          end
         end
     end
 
