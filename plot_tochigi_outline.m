@@ -1,3 +1,14 @@
+//1:黒
+//2:青
+//3:緑
+//4:水色
+//5:赤
+//6:紫
+//7:黄
+//8:白
+//9:紺
+
+
 geodata = fromJSON("N03-19_09_190101.geojson","file");
 
 
@@ -10,17 +21,24 @@ outline = geodata.features(i).geometry.coordinates;
 if type(outline) == 15
   for j = 1:length(outline)
     lng = outline(j)(:,1);
-    lat = outline(j)(:,2);
-    plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
-    //fill(lng,lat,'y');
+    lat = outline(j)(:,2); 
+    //plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
+    xfpoly(lng,lat,3);
   end
 else
   lng = outline(:,1);
   lat = outline(:,2);
-  plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
-  //fill(lng,lat,'y');
+  
+  poly_lng = lng;
+  poly_lat = lat;
+  
+  
+  //plot(lng,lat,'Color',[0 0 0],'LineWidth',3);
+  xfpoly(lng,lat,3);
 end
 
+
+//宇都宮以外のポリゴンを表示
 for i = 2:length(geodata.features)
   outline = geodata.features(i).geometry.coordinates;
 
@@ -28,20 +46,49 @@ for i = 2:length(geodata.features)
   //disp(type(outline));
 	
   if type(outline) == 15
-    for j = 1:length(outline)
-      lng = outline(j)(:,1);
-      lat = outline(j)(:,2);
-      plot(lng,lat);
-      //fill(lng,lat,'w');
+	for j = 1:length(outline)
+		lng = outline(j)(:,1);
+		lat = outline(j)(:,2);
+
+		poly_lng = [poly_lng;lng];
+  		poly_lat = [poly_lat;lat];
+
+		//plot(lng,lat);
     end
   else
     lng = outline(:,1);
     lat = outline(:,2);
-    plot(lng,lat);
-    //fill(lng,lat,'w');
+    
+    poly_lng = [poly_lng;lng];
+  	poly_lat = [poly_lat;lat];
+    
+    //plot(lng,lat);
   end
 end
 
+
+//ポリゴンを一つにしたいけどやり方不明
+/*
+unique_lng = unique(poly_lng);
+
+for i = 1:length(unique_lng)
+	unique_lat_min(i) = 1000;//1000より北緯は必ず小さい
+	unique_lat_max(i) = 0;//0より北緯は必ず大きい
+end
+
+for i = 1:length(unique_lng)
+	//何らかの方法でunique_lngのインデックスを探す
+	j = find(poly_lng == unique_lng(i));
+	//jが複数ある場合がある
+	if unique_lat_min(i) > poly_lat(j(1))
+		unique_lat_min(i) = poly_lat(j(1));
+	end
+	
+	if unique_lat_max(i) < poly_lat(j(1))
+		unique_lat_max(i) = poly_lat(j(1));
+	end
+end
+*/
 
 
 /*
